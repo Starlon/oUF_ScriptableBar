@@ -16,16 +16,14 @@ local Update = function(self)
 		bar:SetWidth(widget.length)
 		local r, g, b, a = 1, 1, 1, 1
 		
-		if widget.color1 and widget.widget1 then
+		if widget.color1 then
 			r, g, b, a = widget.color1.ret1, widget.color1.ret2, widget.color1.ret3, widget.color1.ret4
-		elseif widget.color2 and widget.widget2 then
-			r, g, b, a = widget.color2.ret1, widget.color2.ret2, widget.color2.ret3, widget.color2.ret4
 		end
+
 		if type(r) == "number" then
 			bar:SetStatusBarColor(r, g, b, a)
 		end
 	end
-print("hmmm")
 end
 
 local Enable = function(self, unit)
