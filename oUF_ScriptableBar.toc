@@ -1,0 +1,8 @@
+## Interface: 40200
+## Author: Starlon
+## Notes: oUF module 
+## Title: oUF_ScriptableBar
+## RequiredDeps: oUF
+## OptionalDeps: LibScriptable-1.0
+
+oUF_ScriptableBar.lua
