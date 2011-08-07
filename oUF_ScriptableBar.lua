@@ -9,16 +9,20 @@ local Update = function(self)
 	local widget = self
 	local bar = widget.bar
 	if bar and bar:GetObjectType() == "StatusBar" then
+
 		bar:SetMinMaxValues(widget.min, widget.max)
 		bar:SetStatusBarTexture(widget.texture)
 		bar:SetValue(widget.val1 * widget.max)
 		bar:SetHeight(widget.height)
 		bar:SetWidth(widget.length)
+		bar:Show()
+
 		local r, g, b, a = 1, 1, 1, 1
 		
 		if widget.color1 then
 			r, g, b, a = widget.color1.ret1, widget.color1.ret2, widget.color1.ret3, widget.color1.ret4
 		end
+
 
 		if type(r) == "number" then
 			bar:SetStatusBarColor(r, g, b, a)
@@ -34,8 +38,8 @@ local Enable = function(self, unit)
 		local errorLevel = 2
 		local name = bar.name or "ScriptableBar"
 
+		bar.unitOverride = bar.unitOverride or unit
 		local widget = bar.widget or WidgetBar:New(self.core, name, bar, row, col, layer, errorLevel, Update)
-		widget.environment.unit = unit
 		widget:Start()
 		widget.bar = bar
 		bar.widget = widget
