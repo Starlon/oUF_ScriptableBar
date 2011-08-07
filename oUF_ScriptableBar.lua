@@ -36,7 +36,7 @@ local Enable = function(self, unit)
 		assert(self.core)
 		local col, row, layer = 0, 0, 0
 		local errorLevel = 2
-		local name = bar.name or "ScriptableBar"
+		local name = bar.name or ("ScriptableBar" .. random())
 
 		bar.unitOverride = bar.unitOverride or unit
 		local widget = bar.widget or WidgetBar:New(self.core, name, bar, row, col, layer, errorLevel, Update)
