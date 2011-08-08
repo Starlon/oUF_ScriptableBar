@@ -5,6 +5,9 @@ local WidgetBar = assert(LibStub("LibScriptableWidgetBar-1.0"), "oUF_ScriptableB
 oUF.ALIGN_LEFT, oUF.ALIGN_CENTER, oUF.ALIGN_RIGHT, oUF.ALIGN_MARQUEE, oUF.ALIGN_AUTOMATIC, oUF.ALIGN_PINGPONG = 1, 2, 3, 4, 5, 6
 oUF.SCROLL_RIGHT, oUF.SCROLL_LEFT = 1, 2
 
+local frames = {}
+local tinsert = table.insert
+
 local Update = function(self)
 	local widget = self
 	local bar = widget.bar
@@ -30,6 +33,12 @@ local Update = function(self)
 	end
 end
 
+local MyUpdate = function(self, event, unit)
+	if unit ~= self.unit or not self.ScriptableBar then return end
+	local widget = self.ScriptableBar.widget
+	widget:Update()
+end
+
 local Enable = function(self, unit)
 	local bar = self.ScriptableBar
 	if bar and bar:GetObjectType() == "StatusBar" then
@@ -38,9 +47,8 @@ local Enable = function(self, unit)
 		local errorLevel = 2
 		local name = bar.name or ("ScriptableBar" .. random())
 
-		bar.unitOverride = bar.unitOverride or unit
 		local widget = bar.widget or WidgetBar:New(self.core, name, bar, row, col, layer, errorLevel, Update)
-		widget:Start()
+		widget:Start(unit)
 		widget.bar = bar
 		bar.widget = widget
 	end
@@ -48,8 +56,9 @@ local Enable = function(self, unit)
 end
 
 local Disable = function(self)
-	self.widget:Stop()
+	if not self.ScriptableBar then return end
+	self.ScriptableBar.widget:Stop()
 	return true
 end
 
-oUF:AddElement('ScriptableBar', nil, Enable, Disable)
+oUF:AddElement('ScriptableBar', MyUpdate, Enable, Disable)
