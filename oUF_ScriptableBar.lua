@@ -36,21 +36,24 @@ end
 local MyUpdate = function(self, event, unit)
 	if unit ~= self.unit or not self.ScriptableBar then return end
 	local widget = self.ScriptableBar.widget
-	widget:Update()
+	widget:Start(unit)
+--for k, v in pairs(frames) do
+--	local widget = v.ScriptableBar.widget
+--end
 end
 
 local Enable = function(self, unit)
 	local bar = self.ScriptableBar
-	if bar and bar:GetObjectType() == "StatusBar" then
-		assert(self.core)
+	if self.unit == unit and bar and bar:GetObjectType() == "StatusBar" then
+		tinsert(frames, self)
 		local col, row, layer = 0, 0, 0
 		local errorLevel = 2
-		local name = bar.name or ("ScriptableBar" .. random())
+		local name = bar.name or ("ScriptableBar" .. unit .. ":" .. random() * 100)
 
-		local widget = bar.widget or WidgetBar:New(self.core, name, bar, row, col, layer, errorLevel, Update)
-		widget:Start(unit)
-		widget.bar = bar
+		local widget = WidgetBar:New(self.core, name, bar, row, col, layer, errorLevel, Update)
 		bar.widget = widget
+		widget.bar = bar
+		widget:Start(unit)
 	end
 	return true
 end
