@@ -8,6 +8,17 @@ oUF.SCROLL_RIGHT, oUF.SCROLL_LEFT = 1, 2
 local frames = {}
 local tinsert = table.insert
 
+local keys = {}
+local uid = function(unit)
+	local key = parent .. unit .. floor(random() * 1000000)
+	if keys[key] then 
+		uid(unit)
+		return parent .. unit .. random()
+	end
+	keys[key] = true
+	return key
+end
+
 local Update = function(self)
 	local widget = self
 	local bar = widget.bar
@@ -35,32 +46,35 @@ end
 
 local MyUpdate = function(self, event, unit)
 	if unit ~= self.unit or not self.ScriptableBar then return end
-	local widget = self.ScriptableBar.widget
-	widget:Start(unit)
---for k, v in pairs(frames) do
---	local widget = v.ScriptableBar.widget
---end
+	for i, widget in ipairs(self.ScriptableBar) do
+		widget:Start(unit)
+	end
 end
 
 local Enable = function(self, unit)
-	local bar = self.ScriptableBar
-	if self.unit == unit and bar and bar:GetObjectType() == "StatusBar" then
-		tinsert(frames, self)
-		local col, row, layer = 0, 0, 0
-		local errorLevel = 2
-		local name = bar.name or ("ScriptableBar" .. unit .. ":" .. random() * 100)
+	if self.unit ~= unit then return end
+	local bars = self.ScriptableBar
+	for i, bar in ipairs(bars) do
+		if self.unit == unit and bar and bar:GetObjectType() == "StatusBar" then
+			tinsert(frames, self)
+			local col, row, layer = 0, 0, 0
+			local errorLevel = 2
+			local name = bar.name or uid(unit)
 
-		local widget = WidgetBar:New(self.core, name, bar, row, col, layer, errorLevel, Update)
-		bar.widget = widget
-		widget.bar = bar
-		widget:Start(unit)
+			local widget = WidgetBar:New(self.core, name, bar, row, col, layer, errorLevel, Update)
+			bars[i] = widget
+			widget.bar = bar
+			widget:Start(unit)
+		end
 	end
 	return true
 end
 
 local Disable = function(self)
 	if not self.ScriptableBar then return end
-	self.ScriptableBar.widget:Stop()
+	for i, widget in ipairs(self.ScriptableBar) do
+		widget:Stop()
+	end
 	return true
 end
 
