@@ -45,15 +45,16 @@ local Update = function(self)
 end
 
 local MyUpdate = function(self, event, unit)
-	if unit ~= self.unit or not self.ScriptableBar then return end
-	for i, widget in ipairs(self.ScriptableBar) do
+	local bars = self.ScriptableBar
+	if unit ~= self.unit or not bars then return end
+	for i, widget in ipairs(bars) do
 		widget:Start(unit)
 	end
 end
 
 local Enable = function(self, unit)
-	if self.unit ~= unit then return end
 	local bars = self.ScriptableBar
+	if self.unit ~= unit or not bars then return end
 	for i, bar in ipairs(bars) do
 		if self.unit == unit and bar and bar:GetObjectType() == "StatusBar" then
 			tinsert(frames, self)
